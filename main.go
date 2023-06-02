@@ -21,10 +21,9 @@ func (h *loggingHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-
-
-    // Serve the React.js static files
+    // Serve the static files
     dir := http.Dir("./dist/")
+
     // Wrap the file server handler with logging
     fs := &loggingHandler{handler: http.FileServer(dir)}
 	
@@ -36,7 +35,6 @@ func main() {
     }
 
     file.Close()
-
 
     srv := &http.Server {
         Addr: ":8018",
@@ -51,7 +49,8 @@ func main() {
 			log.Fatal(err)
 		}
 	}()
-
+    
+    // Create a channel to listen for OS signals
     quit := make(chan os.Signal, 1)
     signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 
